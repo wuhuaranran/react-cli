@@ -3,7 +3,19 @@ const babelConfig = {
         useBuiltIns: "entry",
         corejs: 2
     }], "@babel/preset-react"],
-    plugins: ["@babel/plugin-syntax-dynamic-import",'@babel/plugin-transform-runtime','@babel/plugin-proposal-class-properties']
+    plugins: [
+        "@babel/plugin-syntax-dynamic-import",
+        '@babel/plugin-transform-runtime',
+        '@babel/plugin-proposal-class-properties',
+        [
+            "import",
+            {
+                "libraryName": "antd",
+                "libraryDirectory": "es",
+                "style": "css"
+            }
+        ] // `style: true` 会加载 less 文件
+    ]
 }
 
 module.exports = babelConfig;

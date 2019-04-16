@@ -9,7 +9,7 @@ module.exports = {
             "@babel/polyfill",
             path.join(__dirname, '../src/index.js')
         ],
-        vendor: ['react', 'react-router-dom', 'redux', 'react-dom', 'react-redux']
+        vendor: ['react', 'antd', 'react-router-dom', 'redux', 'react-dom', 'react-redux']
     },
     mode:'development',
     /*输出到dist文件夹，输出文件名字为bundle.js*/
@@ -25,7 +25,7 @@ module.exports = {
             '/api': {
                  target: 'http://localhost:3000',
                  pathRewrite: {'^/api' : ''},  //可转换
-                 changeOrigin:true
+                 changeOrigin: true
             }
         },
         compress: true,  // gzip压缩
@@ -37,20 +37,53 @@ module.exports = {
     /*src文件夹下面的以.js结尾的文件，要使用babel解析*/
     /*cacheDirectory是用来缓存编译结果，下次编译加速*/
     module: {
-        rules: [{
-            test: /\.js$/,
-            use: ['babel-loader?cacheDirectory=true'],
-            include: path.join(__dirname, '../src')
-        },{
-            test: /\.css$/,
-            use: ["style-loader", {
-                loader:'css-loader',
-                options: {
-                    modules: true,
-                    localIdentName: '[local]--[hash:base64:5]'
-                }
-            }, 'postcss-loader']
-         },{
+        rules: [
+            {
+                test: /\.js$/,
+                use: ['babel-loader?cacheDirectory=true'],
+                include: path.join(__dirname, '../src')
+            },
+            {
+                test: /\.(css|less)$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'style-loader'
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: true,
+                            modules: true,
+                            localIdentName: "[local]--[hash:base64:5]"
+                        }
+                    },
+                    {
+                        loader: 'less-loader',
+                        options: {
+                            javascriptEnabled: true
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.(css|less)$/,
+                include: /node_modules/,
+                use: [
+                    {
+                        loader: 'style-loader'
+                    },
+                    {
+                        loader: 'css-loader'
+                    },
+                    {
+                        loader: 'less-loader',
+                        options: {
+                            javascriptEnabled: true
+                        }
+                    }
+                ]
+            },{
              test: /\.(png|jpg|gif)$/,
              use: [{
                  loader: 'url-loader',
