@@ -21,6 +21,13 @@ module.exports = {
     // webpack-dev-server
     devServer: {
         // contentBase: path.join(__dirname, '../dist'),
+        proxy: { // 配置服务代理
+            '/api': {
+                 target: 'http://localhost:3000',
+                 pathRewrite: {'^/api' : ''},  //可转换
+                 changeOrigin:true
+            }
+        },
         compress: true,  // gzip压缩
         host: '0.0.0.0', // 允许ip访问
         hot:true, // 热更新

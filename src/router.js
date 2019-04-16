@@ -24,6 +24,11 @@ const UserInfo = loadable({
     loading: Loading,
     timeout: 10000, // 10 seconds
 })
+const TaskList = loadable({
+    loader: () => import('pages/taskList'),
+    loading: Loading,
+    timeout: 10000, // 10 seconds
+})
 const NotFound = loadable({
     loader: () => import('pages/notfound'),
     loading: Loading,
@@ -37,6 +42,7 @@ const getRouter = () => (
         <Route path="/page" component={Page}/>
         <Route path="/counter" component={Counter}/>
         <Route path="/userinfo" component={UserInfo}/>
+        <Route path="/taskList" component={TaskList}/>
         <Route component={NotFound}/>
     </Switch>
 );
