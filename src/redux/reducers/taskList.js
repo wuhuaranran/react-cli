@@ -10,7 +10,7 @@ export default function reducer(state = initState, action) {
         case GET_TASK_LIST:
             return {
                 ...state,
-                taskList: action.payload,
+                taskList: action.payload
             };
         case GET_ONE_TASK:
             return {
@@ -19,18 +19,15 @@ export default function reducer(state = initState, action) {
             };
         case ADD_TASK:
             return {
-                ...state,
-                taskList: action.payload,
+                ...state
             };
         case UPDATE_TASK:
             return {
-                ...state,
-                taskList: action.payload,
+                ...state
             };
         case DELETE_TASK:
             return {
-                ...state,
-                taskList: action.payload,
+                ...state
             };
         default:
             return state;
