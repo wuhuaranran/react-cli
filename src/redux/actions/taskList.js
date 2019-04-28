@@ -6,6 +6,7 @@ export const GET_ONE_TASK = "taskList/GET_ONE_TASK";
 export const ADD_TASK = "taskList/ADD_TASK";
 export const UPDATE_TASK = "taskList/UPDATE_TASK";
 export const DELETE_TASK = "taskList/DELETE_TASK";
+export const FIND_TASK = "taskList/FIND_TASK"; 
 
 export function getTaskList() {
     return dispatch => {
@@ -26,7 +27,6 @@ export function getOneTask(params) {
     return dispatch => {
         axios.get('/api/tasklist/getOneTask', { params })
             .then(function (response) {
-                console.log(response);
                 let data = response.data;
                 dispatch({
                     type: GET_ONE_TASK,
@@ -34,7 +34,10 @@ export function getOneTask(params) {
                 });
             })
             .catch(function (error) {
-                message.error(error);
+                // console.log(error);
+                // console.log(error instanceof Error);
+                let err = JSON.parse(JSON.stringify(error));
+                message.error(err.response.data.message);
             });
     }
 }
@@ -80,6 +83,21 @@ export function deleteTask(params, fn) {
                     payload: data
                 });
                 if (fn) { fn(data); }
+            })
+            .catch(function (error) {
+                message.error(error);
+            });
+    }
+} 
+export function findById(id) {
+    return dispatch => {
+        axios.get('/api/tasklist/'+id)
+            .then(function (response) {
+                let data = response.data;
+                dispatch({
+                    type: FIND_TASK,
+                    payload: data
+                });
             })
             .catch(function (error) {
                 message.error(error);

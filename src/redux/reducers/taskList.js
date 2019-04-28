@@ -17,18 +17,6 @@ export default function reducer(state = initState, action) {
                 ...state,
                 taskList: action.payload,
             };
-        case ADD_TASK:
-            return {
-                ...state
-            };
-        case UPDATE_TASK:
-            return {
-                ...state
-            };
-        case DELETE_TASK:
-            return {
-                ...state
-            };
         default:
             return state;
     }

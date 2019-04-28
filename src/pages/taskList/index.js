@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Button, Table, Divider, Card, Input, Modal, Form, Row, Col, message } from 'antd';
-import { getTaskList, getOneTask, addTask, updateTask, deleteTask } from "actions/taskList";
+import { Button, Table, Divider, Card, Input, Modal, Form, Row, Col, message, Upload, Icon, } from 'antd';
+import { getTaskList, getOneTask, addTask, updateTask, deleteTask, findById } from "actions/taskList";
 import styles from './index.less';
 
 const FormItem = Form.Item;
@@ -13,6 +13,11 @@ class taskList extends Component {
         visible: false,
         modalType: 'add'
     }
+    componentDidMount() {
+        this.init();
+        // this.findById('5');
+    }
+    
     init = () => {
         this.props.getTaskList()
     }
@@ -33,15 +38,17 @@ class taskList extends Component {
             name: e.target.value
         })
     }
+    findById = (id) => {
+        this.props.findById(id);
+    }
     /* 保存 */
     handleOk = () => {
         this.props.form.validateFieldsAndScroll(['name', 'description'], (err, values) => {
             if (!err) {
                 let params = { ...values };
                 if (this.state.modalType === 'edit') {
-                    const { id, createTime, status, person } = this.state.record;
+                    const { id, status, person } = this.state.record;
                     params.id = id;
-                    params.createTime = createTime;
                     params.person = person;
                     params.status = status;
                     this.props.updateTask(params, (res) => {
@@ -50,9 +57,9 @@ class taskList extends Component {
                         this.init();
                     })
                 } else if (this.state.modalType === 'add') {
-                    params.createTime = moment().format('YYYY-MM-DD');
                     params.person = 'zx';
                     params.status = 0;
+                    params.aaaaaaa = 0;
                     this.props.addTask(params, (res) => {
                         this.setState({ visible: false });
                         message.success("新增成功!");
@@ -97,10 +104,9 @@ class taskList extends Component {
                 title: '创建时间',
                 dataIndex: 'createTime',
                 key: 'createTime',
-            // }, {
-            //     title: '状态',
-            //     dataIndex: 'status',
-            //     key: 'status',
+                render: (text, record) => (
+                    moment(text).format('YYYY-MM-DD HH:mm:ss')
+                )
             }, {
                 title: '创建人',
                 dataIndex: 'person',
@@ -118,13 +124,31 @@ class taskList extends Component {
             }
         ];
         const { visible } = this.state;
+        const props = {
+            name: 'file',
+            action: '/api/tasklist/upload/',
+            headers: {
+                authorization: 'authorization-text',
+            },
+            onChange(info) {
+                if (info.file.status !== 'uploading') {
+                    console.log(info.file, info.fileList);
+                }
+                if (info.file.status === 'done') {
+                    message.success(`${info.file.name} file uploaded successfully`);
+                } else if (info.file.status === 'error') { 
+                    message.error(`${info.file.name} file upload failed.`);
+                }
+            },
+        };
         return (
             <div>
                 <Card className={styles.toolbar}>
-                    {/* <Button type='primary' onClick={this.init}>全部</Button> */}
                     <Input placeholder="name" style={{ width: '100px' }} onChange={this.handleInputChange} />
                     <Button type='primary' onClick={this.search}>查询</Button>
+                    <Button type='primary' onClick={this.init}>全部</Button>
                     <Button type='primary' onClick={this.add}>新增</Button>
+                    <Upload {...props}><Button>上传</Button></Upload>
                 </Card>
                 <Table
                     dataSource={taskList}
@@ -136,7 +160,7 @@ class taskList extends Component {
                     title={'编辑'}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
-                    footer={null}
+                    // footer={null}
                     // destroyOnClose={true}
                 >
                     <Form>
@@ -169,10 +193,10 @@ class taskList extends Component {
                                     </FormItem>
                                 </Col>
                             </Row>
-                            <Row className={styles.modalButton}>     
+                            {/* <Row className={styles.modalButton}>     
                                 <Button onClick={this.handleCancel} >取消</Button>
                                 <Button onClick={this.handleOk} type="primary" >保存</Button>
-                            </Row>
+                            </Row> */}
                         </div>
                     </Form>
                 </Modal>
@@ -181,4 +205,4 @@ class taskList extends Component {
     }
 }
 
-export default connect((taskList) => taskList, { getTaskList, getOneTask, addTask, updateTask, deleteTask })((Form.create()(taskList)));
+export default connect((taskList) => taskList, { getTaskList, getOneTask, addTask, updateTask, deleteTask, findById })((Form.create()(taskList)));
