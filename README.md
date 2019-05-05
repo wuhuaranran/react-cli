@@ -21,5 +21,5 @@ https://juejin.im/post/5c9d88ea6fb9a070c6189d69#heading-33
 
 ### 修改git账号
 .git/config文件
-username = "username"
-password = "password"
+username = username
+password = password
