@@ -17,3 +17,9 @@ server目录下启动node服务：```npm run test```
 
 教程链接
 https://juejin.im/post/5c9d88ea6fb9a070c6189d69#heading-33
+
+
+### 修改git账号
+.git/config文件
+username = "username"
+password = "password"
